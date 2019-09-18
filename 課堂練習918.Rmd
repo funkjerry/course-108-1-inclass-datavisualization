@@ -89,7 +89,159 @@ collegeData <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data
 ```
 
 ```{r}
-slice(collegeData,1:4,(n()-2):n(),101:110)
+slice(collegeData,1:4,(n()-2):n(),101:110)%>% View
 ```
 
+```{r}
+StuDF
+mutate(StuDF,
+       調分後成績=成績+10) -> StuDF
+transmute(StuDF,
+          調分後成績=成績+10)->Stu123
+```
+
+```{r}
+mutate(collegeData,
+       男生=一年級男生+二年級男生+三年級男生+四年級男生)-> collegeData
+  
+collegeData$女生 <-
+  collegeData$一年級女生+collegeData$二年級女生+collegeData$三年級女生+collegeData$四年級女生
+
+collegeData$男女生比<-collegeData$男生/collegeData$女生
+```
+
+```{r}
+StuDF
+summarise(StuDF,
+        平均成績=mean(成績),
+        最高分=max(成績),
+        最低分=min(成績))
+
+```
+
+```{r}
+StuDF
+mutate(StuDF,
+        平均成績=mean(成績),
+        最高分=max(成績),
+        最低分=min(成績))
+```
+
+```{r}
+mutate(StuDF,
+       平均成績=mean(成績),
+       最高分=max(成績),
+       最低分=min(成績),
+       調整後成績=成績+(最高分-最低分)/5)
+```
+
+```{r}
+StuDF
+mutate(StuDF,
+        平均成績=mean(成績),
+        最高分=max(成績),
+        最低分=min(成績)) -> StuDF2
+```
+
+```{r}
+StuDF2
+names(StuDF2)
+select(StuDF2,
+       姓名,學號,成績,調分後成績)
+select(StuDF2,
+       -次序,-性別,-最高分,-最低分)
+```
+
+```{r}
+select(StuDF2,
+       次序,性別,
+       contains("最"))
+
+select(StuDF2,
+       -次序,-性別,
+       -contains("最"))
+```
+
+```{r}
+select(collegeData,
+       contains("男生"))
+```
+
+```{r}
+StuDF
+# logical vector
+logiChoose <- c(
+  F,F,F,T,T,F,T,F
+)
+# 使用logical vector選擇所要觀測值"女"
+StuDF[logiChoose,]
+```
+
+```{r}
+StuDF
+filter(StuDF,
+       性別=="女")
+filter(StuDF,
+       (性別=="女" & 成績>60))
+filter(StuDF,
+       性別=="女",
+       成績>60) # 多個AND條件可用,分隔
+```
+
+```{r}
+collegeData
+filter(collegeData,
+       縣市名稱=="30臺北市") 
+```
+
+```{r}
+collegeData
+filter(collegeData,
+       縣市名稱=="30臺北市"|縣市名稱=="01新北市"
+)
+```
+
+```{r}
+group_by(StuDF,
+         性別) -> StuDF_by性別
+
+# 使用grouped data frame
+summarise(StuDF_by性別,
+        平均成績=mean(成績),
+        最高分=max(成績),
+        最低分=min(成績))
+
+# 使用ungrouped data frame
+summarise(StuDF,
+        平均成績=mean(成績),
+        最高分=max(成績),
+        最低分=min(成績))
+```
+
+```{r}
+mutate(
+  StuDF_by性別,
+  最高分=max(成績),
+  最低分=min(成績),
+  調分大小=(最高分-最低分)/5,
+  調分後成績=成績+調分大小
+) -> StuDF_依性別調分
+StuDF_依性別調分
+```
+
+```{r}
+ungroup(StuDF_依性別調分) -> 
+  StuDF_調分後
+```
+
+```{r}
+group_by(collegeData,
+         縣市名稱,體系別,等級別)->
+  collegeData_grouped
+
+summarise(collegeData_grouped,
+          一年級男生總數=sum(一年級男生),
+          一年級女生總數=sum(一年級女生),
+          學校數目=n())
+```
 
