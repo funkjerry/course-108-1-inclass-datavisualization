@@ -1,0 +1,168 @@
+---
+title: "9/25"
+author: "Steven"
+date: "2019年9月25日"
+output: html_document
+---
+```{r basic setup, message=FALSE, echo=TRUE, eval=T}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(out.width='80%', fig.asp=.75, fig.align='center', fig.showtext=T)
+```
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(out.width='80%', fig.asp=.75, fig.align='center', fig.showtext=T)
+```
+#用數字命名加上反頓點
+```{r}
+df_gatherExample <- data.frame(
+  country=c("A","B","C"),
+  `1999`=c("0.7k","37k","212k"),
+  `2000`=c("2k","80k","213k"),
+  check.names = F
+)
+```
+
+```{r}
+df_gatherExample
+gather(df_gatherExample,
+       `1999`,`2000`,
+       key="年份",value="人口")
+```
+
+```{r}
+library(readr)
+collegeData <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/103_student.csv")
+```
+
+```{r}
+collegeData %>%
+gather(
+  contains("生"),
+  key = "類別",value="人數")
+```
+
+```{r}
+df_gatherExample
+```
+
+```{r}
+library(readr)
+df_taoyuanMarriage <- read_csv("https://data.tycg.gov.tw/opendata/datalist/datasetMeta/download?id=f95d1a33-ec56-44c5-a9ec-3afba8157e39&rid=fd2070ef-7431-4f9c-bc3a-82d7bfbcd2fb")
+```
+
+```{r}
+df_taoyuanMarriage %>%
+gather(
+  ends_with("月"),
+  key="月",value="對數"
+)
+```
+
+```{r}
+df_spreadExample <- data.frame(
+  row = rep(c(1, 51), each = 3),
+  var = c("Sepal.Length", "Species", "Species_num"),
+  value = c(5.1, "setosa", 1, 7.0, "versicolor", 2))
+```
+
+```{r}
+df_spreadExample
+spread(df_spreadExample,
+       var,value)
+```
+
+```{r}
+df_twbankExchangeRate <- read_csv("http://www.bot.com.tw/Govinfo/opendata/csv/151/20180101-20181231-FXCRT.csv")
+```
+```{r}
+df_twbankExchangeRate %>%
+  select(-即期賣出匯率)%>%
+  spread(幣別,即期買入匯率)
+```
+
+```{r}
+df_twbankExchangeRate %>%
+  mutate(
+    幣別=as.factor(幣別),
+    即期買入匯率=as.double(即期買入匯率),
+    日期=lubridate::ymd(日期)
+  )
+```
+#dataimport
+```{r}
+taifex_open_data %>%
+  mutate(
+    日期=lubridate::ymd(日期)
+  )
+```
+
+```{r}
+library(readr)
+subsetDataTWbank <- read_csv("https://www.dropbox.com/s/t8ulj3d7cgl8jh5/subsetDataTWbank.csv?dl=1")
+```
+#geom_point 
+```{r}
+
+library(ggplot2)
+ggplot(subsetDataTWbank)+
+  geom_line(
+    aes(x=西元年月,y=`定存利率-一個月-固定`)
+  )
+
+ggplot(subsetDataTWbank)+
+  geom_point(
+    aes(x=西元年月,y=`定存利率-一個月-固定`)
+  )
+```
+
+```{r}
+gather(subsetDataTWbank,
+  contains("定存"),
+  key = "定存類型",value="利率")->subsetDataTWbank
+```
+```{r}
+ggplot(subsetDataTWbank)+
+  geom_boxplot(
+    aes(x=定存類型,y=利率)
+  )
+```
+#color is like group by
+```{r}
+subsetDataTWbank %>%
+  ggplot()+
+  geom_line(
+    aes(x=西元年月,y=利率,color=定存類型)
+  )
+```
+
+```{r}
+subsetDataTWbank$定存類型 %>% 
+  as.factor %>% levels
+```
+
+```{r}
+subsetDataTWbank %>%
+  mutate(
+    年月=年月 %>%
+      stringr::str_extract_all("[:digit:]+") %>%
+      purrr::map_chr(
+                 function(x) {
+                   x1=as.integer(x[[1]])+1911
+                   x[[1]]=as.character(x1)
+                                stringr::str_c(x,collapse="-")
+                 }
+                 ),
+    年月日=stringr::str_c(年月,"01",sep="-"),
+    西元年月日=lubridate::ymd(年月日)
+  )
+```
+
