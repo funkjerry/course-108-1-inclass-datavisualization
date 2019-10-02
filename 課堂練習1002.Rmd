@@ -1,0 +1,101 @@
+---
+title: "10/2prac"
+author: "Steven"
+date: "2019年10月2日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(grDevices) # 不同顏色模型代碼的呈現及轉換
+library(scales) # show_col()螢幕立即顯示顏色
+library(colorspace) # 調色盤選擇及ggplot應用工具
+library(shinyjs) # 支援套件
+```
+
+##Hsv感官
+```{r}
+library(grDevices)
+rgb(0,0,1) # 即對應顏色強度(0,0,255)
+```
+
+```{r}
+library(scales)
+show_col(c(rgb(0,0,1),rgb(0.5,0,0.7)))
+```
+
+```{r}
+show_col(
+  c(
+    hsv(30/360,0,0),hsv(30/360,0.5,0),hsv(30/360,1,0), # (,,lightness=0) 全暗
+    hsv(30/360,0,0.5),hsv(30/360,0.5,0.5),hsv(30/360,1,0.5), # (,,lightness=0.5)
+    hsv(30/360,0,1),hsv(30/360,0.5,1),hsv(30/360,1,1) # (,,lightness=1) 全亮
+  )
+)
+```
+
+```{r}
+colorspace::choose_color()
+```
+
+```{r}
+install.packages("magrittr")
+library(magrittr)
+library(plotly)
+```
+
+```{r}
+data.frame(
+  x1 = factor(sample(c(1L,2L,3L),100,replace=T)),
+  x2 = runif(100),
+  y = runif(100),
+  z1 = rnorm(100),
+  z2 = factor(sample(letters[1:4],100,replace=T))
+) -> df_example
+```
+
+```{r}
+df_example %>%
+  ggplot()+
+  geom_point(
+    aes(x=x2,y=y,color=z1)
+  ) -> basicScatterPlot
+basicScatterPlot
+```
+
+```{r}
+basicScatterPlot+
+  scale_fill_brewer(palette = "Spectral")
+```
+
+```{r}
+library(readr)
+```
+
+```{r}
+disposableIncome <- read_csv("https://www.dropbox.com/s/z80sbjw94cjex8x/disposableIncome.csv?dl=1",
+locale = locale(encoding = "BIG5"), skip = 4)
+```
+```{r}
+
+```
+
+```{r}
+disposableIncome %>% 
+  ggplot()+
+  geom_point(aes(x="X1",y="平均每戶可支配所得")
+
+```
+
+```{r}
+library(showtext)
+```
+
+```{r}
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+```
+
