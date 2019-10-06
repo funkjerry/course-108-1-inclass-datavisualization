@@ -47,21 +47,21 @@ collegeData$女生 <-
 collegeData$一年級女生+collegeData$二年級女生+collegeData$三年級女生+collegeData$四年級女生 
 collegeData
 
-
-select(collegeData$學校名稱,
-       contains("國立"))
-->collegeData$公立學校
-
-select(collegeData$學校代碼,
-       -contains("國立"))
-->collegeData$私立學校
 ```
 
 ```{r}
-library(ggplot2)
+select(collegeData,contains("國立"))
+
+select(collegeData,
+       contains("男生"))
+```
+
+```{r}
+
 ggplot(collegeData) +
     geom_point(
-    aes(x=男生, y=女生)
+    aes(x=男生, y=女生,color=體系別)
+    )
 ```
 
 ```{r}
