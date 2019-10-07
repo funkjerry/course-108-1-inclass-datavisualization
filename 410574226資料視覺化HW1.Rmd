@@ -46,50 +46,22 @@ mutate(collegeData,
 collegeData$女生 <-
 collegeData$一年級女生+collegeData$二年級女生+collegeData$三年級女生+collegeData$四年級女生 
 collegeData
-
+filter(collegeData,collegeData$學校名稱=="國立臺北大學")->graphData$graphy
 ```
 
-```{r}
-select(collegeData,contains("國立"))
-
-select(collegeData,
-       contains("男生"))
-```
-
-```{r}
-
-ggplot(collegeData) +
-    geom_point(
-    aes(x=男生, y=女生,color=體系別)
-    )
-```
-
-```{r}
-ggplot(data=airquality) +   
-    
-    # 要畫線的話，對應的函式是geom_line()
-    geom_line(aes(x=Temp,  
-                   y=Ozone,
-                   color=Month) 
-               ) +
-    
-    # 用labs()，進行文字上的標註(Annotation)
-    labs(title="Line Plot of Temp-Ozone",
-         x="Temp",
-         y="Ozone") +
-    
-    theme_bw()
-```
 
 #### 繪圖程式
 
 ```{r graph, echo=T, eval=T}
-graphData$bop_aq %>%
-  ggplot()+
-  geom_line(
-    aes(x=年季,y=`A.  經常帳`)
-  ) -> finalplot
-finalplot
+    ggplot(graphData$graphy) +
+    geom_line(
+      aes(x=女生,y=男生,color=等級別))+
+    geom_point(
+      aes(x=女生,y=男生,color=等級別)    
+    )->finalplot
+    finalplot
+
+ 
 ```
 
 #### 設計說明
@@ -97,7 +69,7 @@ finalplot
 
 *** 
 
-此圖為西元2015年第三季至2019年第四季台灣經常帳餘額，期間餘額維持在200億美元上下。資料期間，最高餘額為2017年第三季，金額達280.19億美元，最低為2018年第三季，金額為112.98億美元。
+此圖資料為106學年大專院校校別學生數，我將國立台北大學的學生特別挑出，並進行男女生數量的比較。由圖可知，國立台北大學的學生大部分為學士，且女生多於男生。次多的學生為碩士，碩士的男女由斜率可知大約為1:1。而博士班的男女生太少，可以知道國立台北大學應該很少系有博士班。
 
 ```{r}
 finalplot %>%
