@@ -1,0 +1,85 @@
+---
+title: "每週一圖作業"
+output: html_document
+params:
+  組員: ["王先誠"]  
+  學號: ["410574226"]
+---
+
+#### 環境設定
+
+以下為老師執行時一定會存在的環境設定
+```{r basic setup, message=FALSE, echo=TRUE, eval=T}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(out.width='80%', fig.asp=.75, fig.align='center', fig.showtext=T)
+```
+
+#### 資料處理
+
+此部份在做：
+
+  * 原始Rda資料引入（即引入**dataList**物件）；
+  
+  * 資料清理成作圖用graphData物件。
+
+請將你最原始的資料連同作業一起上傳到作業上傳網址：  
+  * 若「原始資料為網頁下載」，且下載指令寫在data cleaning chunk裡的話，可以不用上傳「資料」。  
+  * 若原始資料有很多個檔案，請先引入成data frame並存在「一個」.Rda檔裡上傳（如`example_data.Rda`檔）。  
+
+資料檔引入到進入作圖前的資料處理請寫在下面區塊，分二部份：
+
+  * 資料處理  
+  * 作圖用資料物件生成(最後形成作圖資料物件graphData)
+  
+```{r data cleaning, echo=TRUE, eval=T}
+library(readr)
+studentData <- read_csv("http://stats.moe.gov.tw/files/detail/107/107_ab106_C.csv")
+
+graphData <- list(studentData)
+library(tidyr)
+studentData$外國生<-as.numeric(studentData$學位生_正式修讀學位外國生)
+studentData$僑生<-as.numeric(studentData$`學位生_僑生(含港澳)`)
+studentData$陸生<-as.numeric(studentData$學位生_正式修讀學位陸生)
+studentData<-gather(studentData,"外國生","僑生","陸生",
+key="大學生類型",value="人數")
+graphData$graphy <-filter(studentData,洲別=="亞洲"& 人數>1000)
+
+graphData$graphy
+
+
+
+
+```
+
+
+#### 繪圖程式
+
+```{r graph, echo=T, eval=T}
+library(grDevices) # 不同顏色模型代碼的呈現及轉換
+library(scales) # show_col()螢幕立即顯示顏色
+library(colorspace) # 調色盤選擇及ggplot應用工具
+library(shinyjs) # 支援套件
+graphData$graphy %>%
+  ggplot()+
+  geom_col(aes(x=國別,y=人數,fill=大學生類型),width=0.3)->
+  finalplot
+finalplot
+
+choose_palette(gui="shiny")
+
+colorspace::sequential_hcl(n = 3, h = c(0, 90), c = c(80, NA, 30), l = c(30, 90), power = c(0.2, 2), register = "Custom-Palette")
+
+finalplot+
+  scale_fill_discrete_sequential(palette="Custom-Palette")
+```
+
+#### 設計說明
+說明想傳達的訊息（必要）及設計想法（非必要）。寫在***之後
+
+*** 
+此圖為107年境外留學人數，經資料篩選後，留下在亞洲超過1000位留學生的國家，其中台灣最常去留學的亞洲國家為馬來西亞，我們有5000多位被分類為外國生，7000多位被分類為僑生，除了馬來西亞外，前五名常去的國家還有大陸、印尼、香港和越南。
+
