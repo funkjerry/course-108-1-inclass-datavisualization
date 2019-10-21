@@ -6,11 +6,9 @@ params:
   學號: ["410574226"]
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 #### 環境設定
+
+以下為老師執行時一定會存在的環境設定
 ```{r basic setup, message=FALSE, echo=TRUE, eval=T}
 library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext)
 font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
@@ -18,8 +16,73 @@ showtext_auto(enable=TRUE) #啟用字體
 theme_set(theme_classic())
 knitr::opts_chunk$set(out.width='80%', fig.asp=.75, fig.align='center', fig.showtext=T)
 ```
+
 #### 資料處理
+
+此部份在做：
+
+  * 原始Rda資料引入（即引入**dataList**物件）；
+  
+  * 資料清理成作圖用graphData物件。
+
+請將你最原始的資料連同作業一起上傳到作業上傳網址：  
+  * 若「原始資料為網頁下載」，且下載指令寫在data cleaning chunk裡的話，可以不用上傳「資料」。  
+  * 若原始資料有很多個檔案，請先引入成data frame並存在「一個」.Rda檔裡上傳（如`example_data.Rda`檔）。  
+
+資料檔引入到進入作圖前的資料處理請寫在下面區塊，分二部份：
+
+  * 資料處理  
+  * 作圖用資料物件生成(最後形成作圖資料物件graphData)
+  
 ```{r data cleaning, echo=TRUE, eval=T}
-library(readr)
-studentData <- read_csv("http://stats.moe.gov.tw/files/detail/107/107_sdata.csv")
+studentData<- read_csv("http://stats.moe.gov.tw/files/detail/107/107_sdata.csv")
+
 graphData <- list(studentData)
+
+(studentData$科系名稱=="經濟學系"
+  & studentData$等級別=="B 學士")->logichoose
+
+
+CollegeData<-studentData[logichoose,]
+myData<-filter(CollegeData,教師數>0)
+newcodes=c("16位以下教師","17~26位教師","27位以上教師")
+index=1*(myData$教師數<=16)+
+  2*(myData$教師數>16&myData$教師數<=26)+
+  3*(myData$教師數>26)
+myData$教師數=newcodes[index]
+graphData$dayschool <- select(myData,"科系名稱","學校名稱","日間∕進修別","學生數","等級別","教師數")
+```
+#### 繪圖程式
+```{r}
+library(grDevices) # 不同顏色模型代碼的呈現及轉換
+library(scales) # show_col()螢幕立即顯示顏色
+library(colorspace) # 調色盤選擇及ggplot應用工具
+library(shinyjs) # 支援套件
+
+colorspace::sequential_hcl(n = 3, h = c(-4, 80), c = c(100, NA, 47), l = c(55, 96), power = c(1, NA), rev = TRUE, register = "Custom-Palette")
+
+graphData$dayschool %>%
+  ggplot()+
+  geom_col(aes(x=reorder(學校名稱,`學生數`,order=T),y=學生數,fill=(教師數),width=0.5))+
+  scale_fill_discrete_sequential(
+  palette="Custom-Palette")+
+  geom_text(
+    aes(
+      x=reorder(學校名稱,`學生數`,order=T),y=學生數+70,label=round(學生數)
+      ),color="green", size = 3)+
+  labs(y="學士人數",x="有經濟系的學校(17所)",title="(107)我國經濟學系學士人數")+
+
+  coord_flip()+
+geom_hline(aes(y=學生數,width=0.5,yintercept=400),linetype="dotted",color="red")
+```    
+    
+#### 設計說明
+說明想傳達的訊息（必要）及設計想法（非必要）。寫在***之後
+*** 
+此圖為107學年度我國經濟學系學士人數，由圖可知，全台共有17所學校有經濟學系，其中學士人數最多的是東吳大學，教師數最多的學校則視國立台灣大學，另外，透過輔助線可以知道大約一半以上的學校超過400人，而國立台北大學的學士人數為492人，教師人數為中等數量。此外，從圖中的顏色由淺至深的變化，可以了解學士數量大概和教師數量呈正比。
+
+
+
+  
+
+
