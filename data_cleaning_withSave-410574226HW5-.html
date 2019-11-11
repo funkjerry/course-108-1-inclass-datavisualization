@@ -380,17 +380,18 @@ knitr::opts_chunk$set(fig.align=&#39;center&#39;, fig.showtext=T)</code></pre>
 </div>
 <div id="資料處理" class="section level4">
 <h4>資料處理</h4>
-<pre class="r"><code>load(url(&quot;https://github.com/tpemartin/course-108-1-inclass-datavisualization/blob/master/%E4%BD%9C%E5%93%81%E5%B1%95%E7%A4%BA/homework3/graphData_homework3_019.Rda?raw=true&quot;))
-
-(graphData[[1]]$科系名稱==&quot;經濟學系&quot; &amp;
-  graphData[[1]]$等級別==&quot;B 學士&quot;)-&gt;logichoose
-CollegeData&lt;-graphData[[1]][logichoose,]
-myData&lt;-filter(CollegeData,教師數&gt;0)
-myData$師生比 &lt;- myData$教師數/myData$學生數
-graphData&lt;-list(myData)
-graphData$draw&lt;- select(myData,&quot;學校名稱&quot;,&quot;學生數&quot;,&quot;師生比&quot;)
-save(graphData,file=&quot;graphData.Rda&quot;)
+<pre class="r"><code>information &lt;- data.frame(
+  學年度=c(99,100,101,102,103,104,106,107,109),
+  身高=c(154,160,172,173,175,176,177,177,177),
+  體重=c(43,48,58,56,62,63,62,65,65),
+  立定跳遠=c(180,165,239,235,235,240,240,240,250)
+  
+)
+graphData&lt;- 
+  select(information,&quot;學年度&quot;,&quot;身高&quot;,&quot;體重&quot;,&quot;立定跳遠&quot;)
+save(graphData,file = &quot;graphData.Rda&quot;)
 # save(&lt;所有在graph_story.Rmd要用的物件列出來，中間用逗號分隔&gt;, file=&quot;graphData.Rda&quot;) # 此行放在最後一行</code></pre>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 </div>
 
 
