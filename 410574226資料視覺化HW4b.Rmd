@@ -1,0 +1,50 @@
+title: "每週一圖作業繪圖說明檔"
+output: html_document
+params:
+  組員: ["王先誠"]  
+  學號: ["410574226"]
+---
+
+#### 環境設定
+
+以下為老師執行時一定會存在的環境設定
+```{r basic setup, message=FALSE, echo=TRUE, eval=T}
+rm(list=ls())
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(colorspace); library(grDevices); library(shiny); library(shinyjs); library(scales)
+library(tidyr); library(showtext); library(tidyverse); library(colorspace)
+
+#font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
+```
+
+
+#### 繪圖程式
+
+```{r graph, echo=T, eval=T}
+# load("graphData.Rda") # 此行為第一行
+load("graphData.Rda")
+
+colorspace::sequential_hcl(n = 7, h = 10, c = c(65, 100, NA), l = c(20, 97), power = 1.1, rev = TRUE, register = "Custom-Palette")
+graphData$draw %>%
+  ggplot()+
+  geom_col(aes(x=reorder(學校名稱,`學生數`,order=T),y=學生數,fill=(師生比),width=0.5))+
+  scale_fill_continuous_sequential(
+  palette="Custom-Palette")+
+  geom_text(
+    aes(
+      x=reorder(學校名稱,`學生數`,order=T),y=學生數+70,label=round(學生數)
+      ),color="green", size = 3)+
+  labs(y="學士人數",x="有經濟系的學校(17所)",title="(107)我國經濟學系學士人數")+
+
+  coord_flip()+
+geom_hline(aes(y=學生數,width=0.8,yintercept=sum(學生數)/17),linetype="dotted",color="red")
+```
+
+#### 設計說明
+說明想傳達的訊息（必要）及設計想法（非必要）。寫在***下一行。
+
+*** 
+更改教師數為師生比、將漸進線改成平均經濟學系學士人數。由深淺程度可以判斷，大部分的國立大學的經濟系師生比高於0.04，私立大學則少於0.04。
+
