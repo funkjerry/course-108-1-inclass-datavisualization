@@ -1,0 +1,238 @@
+---
+title: "HW7"
+author: "Steven"
+date: "2019/12/11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r basic setup, message=FALSE, echo=TRUE, eval=T}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet); 
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(out.width='80%', fig.asp=.75, fig.align='center', fig.showtext=T)
+```
+
+```{r}
+# 取出spData套件附的world data
+data(world,package="spData")
+class(world) # 已是sf object
+```
+
+```{r}
+###選取亞洲大事國家
+
+for(i in 1:nrow(world)){
+  if(world$name_long[i] =="Sri Lanka"){
+    world$asia[i] <-"斯里蘭卡"
+  }else if(world$name_long[i] =="Republic of Korea"){
+    world$asia[i] <-"南韓"
+  }else if(world$name_long[i] =="Afghanistan"){
+    world$asia[i] <-"阿富汗"
+  }else if(world$name_long[i] =="Iran"){
+    world$asia[i] <-"伊朗"
+  }else if(world$name_long[i] =="Syria"){
+    world$asia[i] <-"敘利亞"
+  }else if(world$name_long[i] =="Israel"){
+    world$asia[i] <-"以色列"
+  }else {
+    world$asia[i] <-"其他"
+  }
+  
+}
+```
+
+```{r}
+#畫初始圖
+world %>% 
+  filter(
+    continent=="Asia"
+  ) %>% 
+  ggplot()+geom_sf(aes(fill=asia))+
+  theme(
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    legend.position = c(0.5, 0.1),
+    legend.direction = "horizontal",
+    plot.title = element_text(hjust=0.45,size =20,face = "bold",color = "yellow"))+
+  labs(
+    title="亞洲政治一周大事",
+    caption="The Economist 11/21"
+  )->worldasiagraph
+```
+
+
+```{r}
+image_read("https://st.depositphotos.com/1000131/3237/v/950/depositphotos_32374171-stock-illustration-us-dollar.jpg")-> dollar
+###美金
+
+dollar %>%
+  image_info()-> dollarinfo
+
+theme_linedraw()+
+  theme(
+    panel.background = element_rect(fill="cyan4")
+  ) -> theme_backgroundCheck
+
+dollar %>%
+  image_ggplot()+
+  theme_backgroundCheck
+
+image_fill(dollar,"transparent", point = "+100+100", fuzz=30) -> 
+  dollartransparent
+
+dollartransparent %>%
+  as.raster() ->
+  raster_dollar
+
+
+loc <- c(lon=126,lat=34) 
+imgWidth <- 0.13 
+
+dollarinfo$height/dollarinfo$width -> img_asp # image aspect ratio
+
+
+```
+
+```{r}
+###囚犯
+image_read("https://icon-library.net/images/crime-icon/crime-icon-26.jpg")->criminal
+
+criminal %>%
+  image_info()-> criminalinfo
+
+
+criminal %>%
+  image_ggplot()+
+  theme_backgroundCheck
+
+
+criminal %>%
+  as.raster() ->
+  raster_criminal
+
+loc <- c(lon=33.9391,lat=67.7100) 
+imgWidth <- 0.13 
+
+criminalinfo$height/criminalinfo$width -> img_asp_criminal # image aspect ratio
+  
+```
+
+```{r}
+##protest
+image_read("https://www.svgrepo.com/show/289393/protest.svg")->protest
+
+protest %>%
+  image_info()-> protestinfo
+
+protest %>%
+  image_ggplot()+
+  theme_backgroundCheck
+
+image_fill(protest,"transparent", point = "+100+100", fuzz=30) -> 
+  protesttransparent
+
+protesttransparent %>%
+  as.raster() ->
+  raster_protest
+
+loc_Iran <- c(lon=32.4279,lat=53.6880) 
+imgWidth <- 0.13 
+
+protestinfo$height/protestinfo$width -> img_asp_protest # image aspect ratio
+  
+```
+
+```{r}
+###airstrike
+image_read("https://t3.rbxcdn.com/7ab0e87d296065ae80ce75d25d0094e7")->airstrike
+
+airstrike %>%
+  image_info()-> airstrikeinfo
+
+airstrike %>%
+  image_ggplot()+
+  theme_backgroundCheck
+
+
+airstrike %>%
+  as.raster() ->
+  raster_airstrike
+
+loc_Syria <- c(lon=38.9968,lat=34.8021) 
+imgWidth <- 0.13 
+
+airstrikeinfo$height/airstrikeinfo$width -> img_asp_airstrike # image aspect ratio
+```
+
+```{r}
+###prime minister
+image_read("https://cdn0.iconfinder.com/data/icons/politician/246/politic001-512.png")->pm
+
+pm %>%
+  image_info()-> pminfo
+
+pm%>%
+  image_ggplot()+
+  theme_backgroundCheck
+
+pm %>%
+  as.raster() ->
+  raster_pm
+
+
+loc_pm <- c(lon=80.7718,lat=7.8731) 
+imgWidth <- 0.13 
+
+pminfo$height/pminfo$width -> img_asp_pm # image aspect ratio
+```
+
+```{r}
+###finalplot
+worldasiagraph  +
+  annotation_raster(raster_dollar,
+               127,131,35,40)+
+  annotation_raster(raster_criminal,
+               64,70,34,40)+
+  annotation_raster(raster_protest,
+               51,57,29,35)+
+  annotation_raster(raster_airstrike,
+               34,40,32,38)+
+  annotation_raster(raster_pm,
+               77,83,5,13)->
+  finalplot
+finalplot
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
