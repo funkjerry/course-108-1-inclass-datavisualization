@@ -58,9 +58,11 @@ world %>%
     axis.title = element_blank(),
     axis.line = element_blank(),
     axis.text = element_blank(),
-    legend.position = c(0.5, 0.1),
+    legend.position = c(0.45, 0.1),
     legend.direction = "horizontal",
-    plot.title = element_text(hjust=0.45,size =20,face = "bold",color = "yellow"))+
+    legend.title = element_text(color = "blue", size = 20),
+    legend.text = element_text(color = "red",size=20),
+    plot.title = element_text(hjust=0.45,size =50,face = "bold",color = "yellow"))+
   labs(
     title="亞洲政治一周大事",
     caption="The Economist 11/21"
@@ -205,7 +207,7 @@ worldasiagraph  +
   annotation_raster(raster_airstrike,
                34,40,32,38)+
   annotation_raster(raster_pm,
-               77,83,5,13)->
+               77,83,5,14)->
   finalplot
 finalplot
 ```
