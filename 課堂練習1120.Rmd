@@ -1,0 +1,112 @@
+---
+title: "Untitled"
+author: "Steven"
+date: "2019/11/20"
+output: html_document
+---
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(colorspace); library(grDevices); library(shiny); library(shinyjs); library(scales)
+library(tidyr); library(showtext); library(tidyverse); library(colorspace)
+library(sf)
+```
+
+```{r}
+read_sf("taiwan/COUNTY_MOI_1080726.shp")-> sf_taiwan
+
+```
+
+```{r}
+# 取出spData套件附的world data
+data(world,package="spData")
+class(world) # 已是sf object
+```
+
+```{r}
+# 目前CRS
+world %>% st_crs 
+```
+
+```{r}
+world %>% st_geometry() %>%
+  ggplot()+geom_sf()
+```
+
+```{r}
+world %>% 
+  st_transform(crs="+proj=laea +y_0=0 +lon_0=155 +lat_0=-90 +ellps=WGS84 +no_defs") -> world_proj
+  
+world_proj %>%
+  ggplot()+geom_sf()
+```
+
+```{r}
+load(url("https://www.dropbox.com/s/elnvocol0nnkcc9/sf_northTaiwan.Rda?dl=1"))
+```
+
+```{r}
+sf_northTaiwan %>%
+  st_centroid(of_largest_polygon = T) ->
+  sf_centroid_northTaiwan
+
+sf_centroid_northTaiwan
+```
+
+```{r}
+sf_centroid_northTaiwan %>%
+  st_coordinates() -> coord_centroid_northTaiwan # 取出座標
+
+coord_centroid_northTaiwan
+```
+
+```{r}
+sf_northTaiwan$x_centroid <- coord_centroid_northTaiwan[,"X"]
+sf_northTaiwan$y_centroid <- coord_centroid_northTaiwan[,"Y"]
+```
+
+```{r}
+read_sf("station/MARK_捷運車站_1080626.shp")-> sf_station
+
+```
+
+```{r}
+load(url("https://www.dropbox.com/s/uvco1te2kbs6o01/MRT_Taipei.Rda?dl=1"))
+```
+
+```{r}
+sf_mrtStops_tpe %>%
+  st_crs() -> sf_mrtStops_tpe_crs
+sf_mrtStops_tpe_crs
+```
+
+```{r}
+  sf_mrtStops_tpe %>%
+  filter(
+    str_detect(經過路線,"BL")
+  ) -> sf_mrtStops_tpe_BL
+
+sf_mrtStops_BL %>% View
+```
+
+
+```{r}
+sf_mrtStops_BL %>%
+  mutate(
+      站號=str_extract(經過路線,"(?<=(BL))[:digit:]+")
+            ) %>%
+  arrange(站號) -> sf_mrtStops_BL
+
+sf_mrtStops_BL %>% View
+```
+
+```{r}
+sf_mrtStops_tpe_BL %>%
+  mutate(
+    站號=str_extract(經過路線,"(?<=(BL))[:digit:]+")) %>%
+  arrange(站號) %>%
+  st_geometry() %>%
+  st_coordinates() %>%
+  st_linestring() %>%
+  st_sfc() -> sfc_mrtline_BL
+```
+

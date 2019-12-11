@@ -1,0 +1,27 @@
+---
+title: "Untitled"
+author: "Steven"
+date: "2019/12/11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("https://www.dropbox.com/s/mdx4777ugnluspz/webApplications.R?dl=1")
+```
+
+```{r}
+project_html_create(
+  main_file="index.html",
+  type="plain", # or bs : bootstrap
+  dirlib="webProject0",
+  structure=c(
+    "js",
+    "css",
+    "assets")
+)
+```
+
