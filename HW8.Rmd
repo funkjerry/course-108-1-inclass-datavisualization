@@ -1,0 +1,92 @@
+---
+title: "data"
+author: "Steven"
+date: "2019/12/24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet); 
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
+```
+
+```{r}
+poster <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "poster", range = "A1:B53")
+```
+
+```{r}
+facebook <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "facebook", range = "A1:B63")
+```
+
+```{r}
+website <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "website", range = "A1:B72")
+```
+
+```{r}
+movie1 <- sum(graphList[[1]]$`event title`=="青銀共賞電影")
+```
+
+```{r}
+graphList <- list(
+  poster,
+  facebook,
+  website
+)
+```
+
+```{r}
+list(
+  類別
+  青銀共賞電影=sum(graphList[[1]]$`event title`=="青銀共賞電影"),
+  北大玩具節=sum(graphList[[1]]$`event title`=="青銀共賞電影")
+)
+```
+
+```{r}
+poster1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(graphList[[1]]$`event title`=="青銀共賞電影"),
+    sum(graphList[[1]]$`event title`=="北大玩具節"),
+    sum(graphList[[1]]$`event title`=="聖誕點燈暨北大管樂節"))
+)
+```
+
+```{r}
+poster1 %>%
+  ggplot()+
+  geom_col(aes(x=type,y=value))
+```
+
+
+```{r}
+df_gatherExample <- data.frame(
+  country=c("A","B","C"),
+  `1999`=c("0.7k","37k","212k"),
+  `2000`=c("2k","80k","213k"),
+  check.names = F
+)
+```
+
+```{r}
+df_gatherExample
+gather(df_gatherExample,
+       `1999`,`2000`,
+       key="年份",value="人口")
+```
+
+```{r}
+df_spreadExample <- data.frame(
+  id = c(1,1,1,2,2,2),
+  var = c("花朶萼片長度", "學名", "總類數"),
+  value = c(5.1, "setosa", 1, 
+            7.0, "versicolor", 2))
+```
+

@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+author: "Steven"
+date: "2019/12/18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("https://www.dropbox.com/s/mdx4777ugnluspz/webApplications.R?dl=1",encoding = "utf-8")
+```
+
+```{r}
+dir.create(
+  "./1211"
+)
+download.file("https://raw.githubusercontent.com/tim8537099/course-108-1-inclass-datavisualization/master/example/tet.Rmd",
+              destfile="1211/tet.Rmd"
+)
+download.file("https://github.com/tim8537099/course-108-1-inclass-datavisualization/blob/master/example/plot_us.Rda?raw=true",
+              destfile="1211/plot_us.Rda"
+)
+
+file.edit("1211/tet.Rmd")
+```
+
+```{r}
+download.file("https://www.dropbox.com/s/99tfecfkblpsij8/getSVGelement.zip?dl=1",
+              destfile = "getSVGelement.zip")
+unzip("getSVGelement.zip")
+```
+
