@@ -18,6 +18,10 @@ knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
 ```
 
 ```{r}
+library(readxl)
+```
+
+```{r}
 poster <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "poster", range = "A1:B53")
 ```
 
@@ -42,14 +46,6 @@ graphList <- list(
 ```
 
 ```{r}
-list(
-  類別
-  青銀共賞電影=sum(graphList[[1]]$`event title`=="青銀共賞電影"),
-  北大玩具節=sum(graphList[[1]]$`event title`=="青銀共賞電影")
-)
-```
-
-```{r}
 poster1 <- data.frame(
   type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
   value=c(
@@ -60,11 +56,32 @@ poster1 <- data.frame(
 ```
 
 ```{r}
-poster1 %>%
-  ggplot()+
-  geom_col(aes(x=type,y=value))
+facebook1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(graphList[[2]]$`event title`=="青銀共賞電影"),
+    sum(graphList[[2]]$`event title`=="北大玩具節"),
+    sum(graphList[[2]]$`event title`=="聖誕點燈暨北大管樂節"))
+)
 ```
 
+```{r}
+website1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(graphList[[3]]$`event title`=="青銀共賞電影"),
+    sum(graphList[[3]]$`event title`=="北大玩具節"),
+    sum(graphList[[3]]$`event title`=="聖誕點燈暨北大管樂節"))
+)
+```
+
+```{r}
+ggplot()
+```
+
+```{r}
+
+```
 
 ```{r}
 df_gatherExample <- data.frame(
