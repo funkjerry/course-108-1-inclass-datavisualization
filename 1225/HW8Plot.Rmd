@@ -1,0 +1,237 @@
+---
+title: "HW8Plot"
+author: "Steven"
+date: "2020/1/6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
+```
+
+
+```{r}
+load("HW8Data.Rda")
+graphList <-list()
+```
+#poster 直方圖
+```{r}
+poster2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=poster2$`event title`,
+      y=poster2$count,
+      fill=poster2$when,
+      group=poster2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="海報觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=poster2$`event title`,
+    y=poster2$count,
+    group=poster2$when,
+    label=poster2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+  theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$posterT
+```
+#facebook畫圖
+```{r}
+facebook2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=facebook2$`event title`,
+      y=facebook2$count,
+      fill=facebook2$when,
+      group=facebook2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="臉書觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=facebook2$`event title`,
+    y=facebook2$count,
+    group=facebook2$when,
+    label=facebook2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+  theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$facebookT
+```
+#website 畫圖
+```{r}
+website2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=website2$`event title`,
+      y=website2$count,
+      fill=website2$when,
+      group=website2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="網頁觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=website2$`event title`,
+    y=website2$count,
+    group=website2$when,
+    label=website2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+    theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$websiteT
+```
+#總觸及次數畫圖
+```{r}
+total3 %>%
+  ggplot()+
+  geom_col(aes(
+    x=`event title`,y=`count`,fill=`when`,
+    group="全部"),
+    width=0.6,
+    )+
+  labs(
+    title="UFO活動觸及次數",
+    subtitle="北大玩具節居冠",
+    x="",y="觸及次數",fill="時段"
+  )+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+  theme(
+    plot.title = element_text(hjust=0.5,size=20),
+    plot.subtitle=element_text(hjust=0.5, color="red",size=15),
+    aspect.ratio=1/1.414,
+    axis.text.x=element_text(color="blue"),
+    axis.text.y=element_text(color="purple",
+                             angle = 315, hjust=1,
+                             vjust=1.2,size=10)
+  )+
+  coord_flip()+
+  annotate("text",x="聖誕點燈暨北大管樂節",
+           y=42,label=41)+
+  annotate("text",x="青銀共賞電影",
+           y=46,label=45)+
+  annotate("text",x="北大玩具節",
+           y=100, label=99) ->
+  graphList$totalT
+```
+#QRcode
+```{r}
+library(qrcode)
+qrcode_gen("https://i.imgur.com/a2cAR5X.jpg",
+           dataOutput=TRUE, plotQRcode=F) -> qr_matrix_toy
+
+qr_dim <- dim(qr_matrix_toy)
+qr_matrix_toy %>%
+  as.character() %>%
+  str_replace_all(
+    c("1"="black",
+      "0"="white")
+  ) -> qr_raster_toy
+
+dim(qr_raster_toy) <- qr_dim
+#qr_raster_toy
+
+ggplot()+
+  scale_x_continuous(limits=c(0,3))+
+  scale_y_continuous(limits=c(0,3))+
+  theme(
+    axis.text.x =element_blank(),
+    axis.text.y=element_blank(),
+    axis.line.x = element_blank(),
+    axis.line.y=element_blank(),
+    )->
+  myGrids
+myGrids+
+  theme(axis.text.x = element_text("北大玩具節"))+
+  annotation_raster(qr_raster_toy,0.5,2.5,0.5,3)->
+  graphList$toy
+
+```
+
+```{r}
+qrcode_gen("https://i.imgur.com/A5BOGCU.jpg",
+           dataOutput=TRUE, plotQRcode=F) -> qr_matrix_movie
+
+qr_dim <- dim(qr_matrix_movie)
+qr_matrix_movie %>%
+  as.character() %>%
+  str_replace_all(
+    c("1"="black",
+      "0"="white")
+  ) -> qr_raster_movie
+
+dim(qr_raster_movie) <- qr_dim
+#qr_raster_movie
+
+myGrids+
+  annotation_raster(qr_raster_movie,0.5,2.5,0.5,3)->
+  graphList$movie
+
+```
+
+```{r}
+qrcode_gen("https://i.imgur.com/jHuJgHN.jpg",
+           dataOutput=TRUE, plotQRcode=F) -> qr_matrix_lalala
+
+qr_dim <- dim(qr_matrix_lalala)
+qr_matrix_lalala %>%
+  as.character() %>%
+  str_replace_all(
+    c("1"="black",
+      "0"="white")
+  ) -> qr_raster_lalala
+
+dim(qr_raster_lalala) <- qr_dim
+#qr_raster_movie
+
+myGrids+
+  annotation_raster(qr_raster_lalala,0.5,2.5,0.5,3)->
+  graphList$lalala
+
+```
+```{r}
+save(graphList, file="HW8Plot.Rda")
+```
+

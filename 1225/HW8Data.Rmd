@@ -1,0 +1,179 @@
+---
+title: "HW8data"
+author: "Steven"
+date: "2020/1/6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
+```
+
+##引入資料
+```{r}
+library(readxl)
+```
+
+```{r}
+poster <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "poster", range = "A1:B53")
+```
+
+```{r}
+facebook <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "facebook", range = "A1:B63")
+```
+
+```{r}
+website <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "website", range = "A1:B72")
+```
+#poster
+```{r}
+hour(poster$timestamp) -> poster$hourtime
+```
+
+```{r}
+for(i in 1:nrow(poster)){
+  if(poster$hourtime[i]<7 & poster$hourtime[i]>=0){
+    poster$when[i] <-"凌晨"
+  }else if(poster$hourtime[i] >=7 & poster$hourtime[i] <12){
+    poster$when[i] <-"上午"
+  }else if(poster$hourtime[i] >=12 & poster$hourtime[i] <19){
+    poster$when[i] <-"下午"
+  }else {
+    poster$when[i] <-"晚上"
+  }
+}
+```
+
+```{r}
+poster %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("青銀共賞電影","聖誕點燈暨北大管樂節","青銀共賞電影"),
+    `when`=c("凌晨","凌晨","晚上"),
+    count=c(0,0,0)
+  ) -> poster2
+```
+
+```{r}
+poster2$when <- factor(poster2$when, levels=c("凌晨","上午","下午","晚上"))
+```
+#facebook
+```{r}
+hour(facebook$timestamp) -> facebook$hourtime
+```
+
+```{r}
+for(i in 1:nrow(facebook)){
+  if(facebook$hourtime[i]<7 & facebook$hourtime[i]>=0){
+    facebook$when[i] <-"凌晨"
+  }else if(facebook$hourtime[i] >=7 & facebook$hourtime[i] <12){
+    facebook$when[i] <-"上午"
+  }else if(facebook$hourtime[i] >=12 & facebook$hourtime[i] <19){
+    facebook$when[i] <-"下午"
+  }else {
+    facebook$when[i] <-"晚上"
+  }
+}
+```
+
+```{r}
+facebook %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("青銀共賞電影","聖誕點燈暨北大管樂節"),
+    `when`=c("凌晨","凌晨"),
+    count=c(0,0)
+  ) -> facebook2
+```
+
+```{r}
+facebook2$when <- factor(facebook2$when, levels=c("凌晨","上午","下午","晚上"))
+```
+
+```{r}
+hour(website$timestamp) -> website$hourtime
+```
+
+```{r}
+for(i in 1:nrow(website)){
+  if(website$hourtime[i]<7 & website$hourtime[i]>=0){
+    website$when[i] <-"凌晨"
+  }else if(website$hourtime[i] >=7 & website$hourtime[i] <12){
+    website$when[i] <-"上午"
+  }else if(website$hourtime[i] >=12 & website$hourtime[i] <19){
+    website$when[i] <-"下午"
+  }else {
+    website$when[i] <-"晚上"
+  }
+}
+```
+
+```{r}
+website %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("北大玩具節","青銀共賞電影"),
+    `when`=c("凌晨","凌晨"),
+    count=c(0,0)
+  ) -> website2
+```
+
+```{r}
+website2$when <- factor(website2$when, levels=c("凌晨","上午","下午","晚上"))
+```
+
+#合併
+```{r}
+total2 <- rbind(poster2, facebook2, website2)
+```
+
+```{r}
+total2 %>%
+  select(`event title`,`when`,`count`) %>%
+  group_by(`event title`,`when`) %>%
+  arrange(`count`) %>%
+  summarise(
+    count=sum(`count`))-> total3
+  
+```
+
+```{r}
+save(
+  poster2,facebook2,website2,total3,
+  file="HW8Data.Rda"
+)
+```
+
+```{r}
+
+
+
+list_graphs$northTW2+
+  annotation_raster(qr_raster,121.8,122.0,24.65,24.85)+
+  theme_void()
+```
+

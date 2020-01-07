@@ -1,0 +1,97 @@
+---
+title: "UFO活動觸及高達百次"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+---
+```{r}
+library(flexdashboard)
+library(readr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(magrittr)
+library(showtext)
+library(grDevices)
+library(scales)
+library(colorspace)
+```
+
+
+```{r}
+load("HW8Data.Rda")
+load("HW8Plot.Rda")
+```
+
+Column {data-width=600, data-height=500}
+-------------------------------------
+    
+### 本學期三大活動
+    
+```{r}
+graphList$totalT
+```
+
+### QRcode
+
+<div id="北大玩具節"></div>
+
+
+```{r,fig.width=2, fig.height=2}
+graphList$toy 
+graphList$movie
+graphList$lalala
+```
+
+
+
+Column {.tabset data-width=400}
+-------------------------------------
+   
+### Poster
+
+```{r}
+graphList$posterT
+```   
+ 
+### Facebook
+    
+```{r}
+graphList$facebookT
+```
+
+### Website
+
+```{r}
+graphList$websiteT
+```
+
+<script type="text/javascript">
+  $(window).bind("load",function(){
+  var listenarea=document.querySelector("#qrcode > div.chart-stage.chart-stage-flex > div > p > img:nth-child(1)")
+var listenarea1=document.querySelector("#qrcode > div.chart-stage.chart-stage-flex > div > p > img:nth-child(2)")
+var listenarea2=document.querySelector("#qrcode > div.chart-stage.chart-stage-flex > div > p > img:nth-child(3)")
+var actionarea=document.getElementById('北大玩具節')
+
+function giveNews(){
+    actionarea.innerHTML="北大玩具節"
+}
+
+listenarea.addEventListener("mouseover",giveNews)
+
+function giveNews2(){
+    actionarea.innerHTML="青銀共享電影"
+}
+
+listenarea1.addEventListener("mouseover",giveNews2)
+
+function giveNews3(){
+    actionarea.innerHTML="聖誕點燈暨北大管樂節"
+}
+
+listenarea2.addEventListener("mouseover",giveNews3)
+  })
+</script>

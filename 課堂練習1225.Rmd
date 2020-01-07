@@ -16,5 +16,39 @@ source("https://www.dropbox.com/s/mdx4777ugnluspz/webApplications.R?dl=1",encodi
 
 ```{r}
 webapp_project_create(dirlib = "./1225",overwrite = T)
+
+```
+
+```{r}
+#poster1 三活動類型次數
+```{r}
+poster1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(poster$`event title`=="青銀共賞電影"),
+    sum(poster$`event title`=="北大玩具節"),
+    sum(poster$`event title`=="聖誕點燈暨北大管樂節"))
+)
+```
+#faceboo1 三活動類型次數
+```{r}
+facebook1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(facebook$`event title`=="青銀共賞電影"),
+    sum(facebook$`event title`=="北大玩具節"),
+    sum(facebook$`event title`=="聖誕點燈暨北大管樂節"))
+)
+```
+#website1 三活動類型次數
+```{r}
+website1 <- data.frame(
+  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
+  value=c(
+    sum(website$`event title`=="青銀共賞電影"),
+    sum(website$`event title`=="北大玩具節"),
+    sum(website$`event title`=="聖誕點燈暨北大管樂節"))
+)
+```
 ```
 

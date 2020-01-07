@@ -8,15 +8,16 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+##library
 ```{r}
-library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet); 
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet)
+
 font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
 showtext_auto(enable=TRUE) #啟用字體
 theme_set(theme_classic())
 knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
 ```
-
+##引入資料
 ```{r}
 library(readxl)
 ```
@@ -32,78 +33,298 @@ facebook <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "fa
 ```{r}
 website <- read_excel("C:/Users/steve/Downloads/mock ufo data.xlsx",sheet = "website", range = "A1:B72")
 ```
-
+#graphlist 空
 ```{r}
-movie1 <- sum(graphList[[1]]$`event title`=="青銀共賞電影")
+graphList <- list()
+```
+#poster$hourtime
+```{r}
+library(stringr)
 ```
 
 ```{r}
-graphList <- list(
-  poster,
-  facebook,
-  website
-)
+hour(poster$timestamp) -> poster$hourtime
+poster$hourtime
+```
+#poster$when 四時段
+```{r}
+for(i in 1:nrow(poster)){
+  if(poster$hourtime[i]<7 & poster$hourtime[i]>=0){
+    poster$when[i] <-"凌晨"
+  }else if(poster$hourtime[i] >=7 & poster$hourtime[i] <12){
+    poster$when[i] <-"上午"
+  }else if(poster$hourtime[i] >=12 & poster$hourtime[i] <19){
+    poster$when[i] <-"下午"
+  }else {
+    poster$when[i] <-"晚上"
+  }
+}
+```
+#poster2 add count
+```{r}
+poster %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("青銀共賞電影","聖誕點燈暨北大管樂節","青銀共賞電影"),
+    `when`=c("凌晨","凌晨","晚上"),
+    count=c(0,0,0)
+  ) -> poster2
+```
+#排序
+```{r}
+poster2$when <- factor(poster2$when, levels=c("凌晨","上午","下午","晚上"))
+factor(poster2$when)
+```
+
+##畫圖
+```{r}
+poster2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=poster2$`event title`,
+      y=poster2$count,
+      fill=poster2$when,
+      group=poster2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="海報觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=poster2$`event title`,
+    y=poster2$count,
+    group=poster2$when,
+    label=poster2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+  theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$posterT
+```
+
+
+#facebook$hourtime
+```{r}
+hour(facebook$timestamp) -> facebook$hourtime
+facebook$hourtime
+```
+#facebook$when
+```{r}
+for(i in 1:nrow(facebook)){
+  if(facebook$hourtime[i]<7 & facebook$hourtime[i]>=0){
+    facebook$when[i] <-"凌晨"
+  }else if(facebook$hourtime[i] >=7 & facebook$hourtime[i] <12){
+    facebook$when[i] <-"上午"
+  }else if(facebook$hourtime[i] >=12 & facebook$hourtime[i] <19){
+    facebook$when[i] <-"下午"
+  }else {
+    facebook$when[i] <-"晚上"
+  }
+}
+```
+#facebook2
+```{r}
+facebook %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("青銀共賞電影","聖誕點燈暨北大管樂節"),
+    `when`=c("凌晨","凌晨"),
+    count=c(0,0)
+  ) -> facebook2
+```
+#facebook排序
+```{r}
+facebook2$when <- factor(facebook2$when, levels=c("凌晨","上午","下午","晚上"))
+factor(facebook2$when)
+```
+#facebook畫圖
+```{r}
+facebook2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=facebook2$`event title`,
+      y=facebook2$count,
+      fill=facebook2$when,
+      group=facebook2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="臉書觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=facebook2$`event title`,
+    y=facebook2$count,
+    group=facebook2$when,
+    label=facebook2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+  theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$facebookT
+```
+#website$hourtime
+```{r}
+hour(website$timestamp) -> website$hourtime
+website$hourtime
+```
+#website$when 四時段
+```{r}
+for(i in 1:nrow(website)){
+  if(website$hourtime[i]<7 & website$hourtime[i]>=0){
+    website$when[i] <-"凌晨"
+  }else if(website$hourtime[i] >=7 & website$hourtime[i] <12){
+    website$when[i] <-"上午"
+  }else if(website$hourtime[i] >=12 & website$hourtime[i] <19){
+    website$when[i] <-"下午"
+  }else {
+    website$when[i] <-"晚上"
+  }
+}
+```
+#website2 add count 
+```{r}
+website %>%
+  select(`event title`,`when`) %>%
+  arrange(`event title`,`when`) %>%
+  group_by(`event title`,`when`) %>%
+  summarise(
+    count=n()) %>%
+  ungroup() %>%
+  add_row(
+    `event title`=c("北大玩具節","青銀共賞電影"),
+    `when`=c("凌晨","凌晨"),
+    count=c(0,0)
+  ) -> website2
+```
+#website$when排序
+```{r}
+website2$when <- factor(website2$when, levels=c("凌晨","上午","下午","晚上"))
+factor(website2$when)
+```
+#website 畫圖
+```{r}
+website2 %>%
+  ggplot()+
+  geom_bar(
+    aes(
+      x=website2$`event title`,
+      y=website2$count,
+      fill=website2$when,
+      group=website2$when),
+      width=0.7,
+    stat="identity",
+    position=
+      position_dodge(width=0.8,preserve="single")
+  )+
+  labs(title="網頁觸及次數",
+       x="USR活動",
+       y="觸及次數",
+       fill="時段")+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+    geom_text(aes(
+    x=website2$`event title`,
+    y=website2$count,
+    group=website2$when,
+    label=website2$`count`),
+    position=position_dodge(width=0.9),hjust=-.5)+
+    theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))+
+  coord_flip()->
+  graphList$websiteT
+```
+#合併
+```{r}
+total2 <- rbind(poster2, facebook2, website2)
 ```
 
 ```{r}
-poster1 <- data.frame(
-  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
-  value=c(
-    sum(graphList[[1]]$`event title`=="青銀共賞電影"),
-    sum(graphList[[1]]$`event title`=="北大玩具節"),
-    sum(graphList[[1]]$`event title`=="聖誕點燈暨北大管樂節"))
-)
+total2 %>%
+  select(`event title`,`when`,`count`) %>%
+  group_by(`event title`,`when`) %>%
+  arrange(`count`) %>%
+  summarise(
+    count=sum(`count`))-> total3
+  
+```
+#總觸及次數畫圖
+```{r}
+total3 %>%
+  ggplot()+
+  geom_col(aes(
+    x=`event title`,y=`count`,fill=`when`,
+    group="全部"),
+    width=0.6,
+    )+
+  labs(
+    title="USR活動觸及次數",
+    subtitle="北大玩具節居冠",
+    x="",y="觸及次數",fill="時段"
+  )+
+  scale_fill_manual(values =               c("#54262F","#52C6F0","#FAA741","#AB92ED"))+
+  theme(
+    plot.title = element_text(hjust=0.5,size=20),
+    plot.subtitle=element_text(hjust=0.5, color="red",size=15),
+    aspect.ratio=1/1.414,
+    axis.text.x=element_text(color="blue"),
+    axis.text.y=element_text(color="purple",
+                             angle = 315, hjust=1,
+                             vjust=1.2,size=10)
+  )+
+  coord_flip()+
+  annotate("text",x="聖誕點燈暨北大管樂節",
+           y=42,label=41)+
+  annotate("text",x="青銀共賞電影",
+           y=46,label=45)+
+  annotate("text",x="北大玩具節",
+           y=100, label=99) 
 ```
 
 ```{r}
-facebook1 <- data.frame(
-  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
-  value=c(
-    sum(graphList[[2]]$`event title`=="青銀共賞電影"),
-    sum(graphList[[2]]$`event title`=="北大玩具節"),
-    sum(graphList[[2]]$`event title`=="聖誕點燈暨北大管樂節"))
-)
+d <- diamonds[sample(nrow(diamonds), 1000), ]
+plot_ly(d, x = ~carat, y = ~price, color = ~carat,
+        size = ~carat, text = ~paste("Clarity: ", clarity))
 ```
 
 ```{r}
-website1 <- data.frame(
-  type=c("青銀共賞電影","北大玩具節","聖誕點燈暨北大管樂節"),
-  value=c(
-    sum(graphList[[3]]$`event title`=="青銀共賞電影"),
-    sum(graphList[[3]]$`event title`=="北大玩具節"),
-    sum(graphList[[3]]$`event title`=="聖誕點燈暨北大管樂節"))
-)
+file.create(".Rprofile")
+file.edit(".Rprofile")
 ```
+
 
 ```{r}
-ggplot()
+plotly_POST(graphList$Total, filename = "total")
+api_create(graphList$Total,filename="total",
+           fileopt = "overwrite")->
+  graphList$newTotal
 ```
 
-```{r}
 
-```
-
-```{r}
-df_gatherExample <- data.frame(
-  country=c("A","B","C"),
-  `1999`=c("0.7k","37k","212k"),
-  `2000`=c("2k","80k","213k"),
-  check.names = F
-)
-```
-
-```{r}
-df_gatherExample
-gather(df_gatherExample,
-       `1999`,`2000`,
-       key="年份",value="人口")
-```
-
-```{r}
-df_spreadExample <- data.frame(
-  id = c(1,1,1,2,2,2),
-  var = c("花朶萼片長度", "學名", "總類數"),
-  value = c(5.1, "setosa", 1, 
-            7.0, "versicolor", 2))
-```
 
