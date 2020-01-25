@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>統計系畢業生</title>
+
+<!--以HTML語法寫下要放在head的內容, 不可使用任何code chunks-->
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+<!--以HTML語法寫下要放在body一開頭的內容, 不可使用任何code chunks-->
+
+
+<h1 class="title toc-ignore">統計系畢業生</h1>
+
+
+
+<div class="container">
+<div class="column">
+<div class="row-sm">
+<div class="alert alert-primary" role="alert">
+  <a href="#" class="alert-link">100學年度上學期</a>. 點擊它!!
+</div>
+<div class="alert alert-secondary" role="alert">
+  <a href="#" class="alert-link">100學年度下學期</a>. 點擊它!!
+</div>
+<div class="alert alert-success" role="alert">
+  <a href="#" class="alert-link">101學年度上學期</a>. 點擊它!!
+</div>
+<div class="alert alert-danger" role="alert">
+  <a href="#" class="alert-link">101學年度下學期</a>. 點擊它!!
+</div>
+<div class="alert alert-warning" role="alert">
+  <a href="#" class="alert-link">102學年度上學期</a>. 點擊它!!
+</div>
+<div class="alert alert-info" role="alert">
+  <a href="#" class="alert-link">102學年度下學期</a>. 點擊它!!
+</div>
+<div class="alert alert-light" role="alert">
+  <a href="#" class="alert-link">103學年度上學期</a>. 點擊它!!
+</div>
+<div class="alert alert-dark" role="alert">
+  <a href="#" class="alert-link">103學年度下學期</a>. 點擊它!!
+</div>
+<div class="alert alert-success" role="alert">
+  <h4 class="alert-heading">Well done!</h4>
+  <p>你這四年共獲得了137學分，恭喜你!!!.</p>
+  <hr>
+  <p class="mb-0">若是知道你能不能畢業，請自行參考系上規定學分數的網頁</p>
+</div>
+</div>
+<div class="row-sm">
+
+<div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+  <div class="card-header">必修獲得學分</div>
+  <div class="card-body">
+    <div id="Aall">77</div>
+    <div id="A126" style="display: none;">14</div>
+    <div id="A34" style="display: none;">12</div>
+    <div id="A5" style="display: none;">11</div>
+    <div id="A78" style="display: none;">0</div>
+  </div>
+</div>
+
+<div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
+  <div class="card-header">選修獲得學分</div>
+  <div class="card-body">
+    <div id="Ball">46</div>
+    <div id="B12" style="display: none;">0</div>
+    <div id="B3456" style="display: none;">6</div>
+    <div id="B78" style="display: none;">11</div>
+  </div>
+</div>
+<div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+  <div class="card-header">通識獲得學分</div>
+  <div class="card-body">
+    <div id="Call">14</div>
+    <div id="C123" style="display: none;">0</div>
+    <div id="C468" style="display: none;">2</div>
+    <div id="C57" style="display: none;">4</div>
+  </div>
+</div>
+</div>
+<div class="row-sm">
+<p>One of three columns</p>
+</div>
+</div>
+</div>
+
+<!--以HTML語法寫下要放在body結尾的內容, 不可使用任何code chunks-->
+<script type="text/javascript" src="js/init.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<script>
+window.onload=function(){
+var listenarea1=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-primary > a")
+var listenarea2=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-secondary > a")
+var listenarea3=document.querySelector("body > div > div > div:nth-child(1) > div:nth-child(3) > a")
+var listenarea4=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-danger > a")
+var listenarea5=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-warning > a")
+var listenarea6=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-info > a")
+var listenarea7=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-light > a")
+var listenarea8=document.querySelector("body > div > div > div:nth-child(1) > div.alert.alert-dark > a")
+
+var actionareaA=document.getElementById('Aall')
+var actionareaA126=document.getElementById('A126')
+var actionareaA34=document.getElementById('A34')
+var actionareaA5=document.getElementById('A5')
+var actionareaA78=document.getElementById('A78')
+var actionareaB=document.getElementById('Ball')
+var actionareaB3456=document.getElementById('B3456')
+var actionareaB78=document.getElementById('B78')
+var actionareaB12=document.getElementById('B12')
+var actionareaC=document.getElementById('Call')
+var actionareaC57=document.getElementById('C57')
+var actionareaC123=document.getElementById('C123')
+var actionareaC468=document.getElementById('C468')
+
+function no1(){
+    actionareaA126.style.display=""
+    actionareaB12.style.display=""
+    actionareaC123.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA34.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaA78.style.display="none"
+    actionareaB3456.style.display="none"
+    actionareaB78.style.display="none"
+    actionareaC468.style.display="none"
+    actionareaC57.style.display="none"
+}
+
+function no3(){
+    actionareaA34.style.display=""
+    actionareaB3456.style.display=""
+    actionareaC123.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA126.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaA78.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaB78.style.display="none"
+    actionareaC57.style.display="none"
+    actionareaC468.style.display="none"
+}
+
+function no4(){
+    actionareaA34.style.display=""
+    actionareaB3456.style.display=""
+    actionareaC468.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA126.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaA78.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaB78.style.display="none"
+    actionareaC123.style.display="none"
+    actionareaC57.style.display="none"
+}
+
+function no5(){
+    actionareaA5.style.display=""
+    actionareaB3456.style.display=""
+    actionareaC57.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA126.style.display="none"
+    actionareaA34.style.display="none"
+    actionareaA78.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaB78.style.display="none"
+    actionareaC123.style.display="none"
+    actionareaC468.style.display="none"
+}
+
+function no6(){
+    actionareaA126.style.display=""
+    actionareaB3456.style.display=""
+    actionareaC468.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA34.style.display="none"
+    actionareaA78.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaB78.style.display="none"
+    actionareaC123.style.display="none"
+    actionareaC57.style.display="none"
+}
+
+function no7(){
+    actionareaA78.style.display=""
+    actionareaB78.style.display=""
+    actionareaC57.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA126.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaA34.style.display="none"
+    actionareaB3456.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaC123.style.display="none"
+    actionareaC468.style.display="none"
+}
+
+function no8(){
+    actionareaA78.style.display=""
+    actionareaB78.style.display=""
+    actionareaC468.style.display=""
+    actionareaA.style.display="none"
+    actionareaB.style.display="none"
+    actionareaC.style.display="none"
+    actionareaA126.style.display="none"
+    actionareaA5.style.display="none"
+    actionareaA34.style.display="none"
+    actionareaB3456.style.display="none"
+    actionareaB12.style.display="none"
+    actionareaC123.style.display="none"
+    actionareaC57.style.display="none"
+}
+listenarea1.addEventListener("click",no1)
+listenarea2.addEventListener("click",no1)
+listenarea3.addEventListener("click",no3)
+listenarea4.addEventListener("click",no4)
+listenarea5.addEventListener("click",no5)
+listenarea6.addEventListener("click",no6)
+listenarea7.addEventListener("click",no7)
+listenarea8.addEventListener("click",no8)
+}
+</script>
+
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

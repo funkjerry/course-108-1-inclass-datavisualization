@@ -1,0 +1,240 @@
+---
+title: "data"
+author: "Steven"
+date: "2020/1/25"
+output: html_document
+---
+
+```{r}
+library(dplyr); library(stringr); library(ggplot2); library(plotly); library(lubridate); library(readr); library(tidyr); library(showtext); library(colorspace); library(scales); library(magick); library(sf); library(rmapshaper); library(osmdata); library(plotly); library(leaflet)
+
+font_add("QYuan","cwTeXQYuan-Medium.ttf") # 新增字體
+showtext_auto(enable=TRUE) #啟用字體
+theme_set(theme_classic())
+knitr::opts_chunk$set(fig.align='center', fig.showtext=T)
+```
+
+
+```{r}
+theme(text=element_text(family="QYuan"),
+    plot.title =element_text(hjust=0.5,size=20),
+        axis.text.x=element_text(color="blue"),
+          axis.text.y = element_text(angle=45,hjust=0.5,color="dark green",size=10))->
+  themeez
+filter(gradeData,系級=="統計學系1",學期==1)->stat1001
+
+```
+#100上
+```{r}
+select(stat1001,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10011
+names(stat10011)
+names(stat10011)[4] <- "必選修"
+```
+#100下
+```{r}
+filter(gradeData,系級=="統計學系1",學期==2)->stat1002
+select(stat1002,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10022
+names(stat10022)[4] <-"必選修"
+```
+#101上
+```{r}
+filter(gradeData,系級=="統計學系2",學期==1)->stat1011
+select(stat1011,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10111
+names(stat10111)[4] <- "必選修"
+```
+#101下
+```{r}
+filter(gradeData,系級=="統計學系2",學期==2)->stat1012
+select(stat1012,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10122
+names(stat10122)[4] <- "必選修"
+```
+#102上
+```{r}
+filter(gradeData,系級=="統計學系3",學期==1)->stat1021
+select(stat1021,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10211
+names(stat10211)[4] <- "必選修"
+```
+#102下
+```{r}
+filter(gradeData,系級=="統計學系3",學期==2)->stat1022
+select(stat1022,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10222
+names(stat10222)[4] <- "必選修"
+```
+#103上
+```{r}
+filter(gradeData,系級=="統計學系4",學期==1)->stat1031
+select(stat1031,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10311
+names(stat10311)[4] <- "必選修"
+```
+#103下
+```{r}
+filter(gradeData,系級=="統計學系4",學期==2)->stat1032
+select(stat1032,"學期成績","科目名稱","學分數","必選修類別（必／選／通）")->stat10322
+names(stat10322)[4] <- "必選修"
+```
+#graphlist
+```{r}
+graphlist <-list()
+stat10011 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="100學年度上學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1001
+```
+
+```{r}
+stat10022 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="100學年度下學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1002
+```
+
+```{r}
+stat10111 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="101學年度上學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1011
+```
+
+```{r}
+stat10122 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="101學年度下學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1012
+```
+
+```{r}
+stat10211 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="102學年度上學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1021
+```
+
+```{r}
+stat10222 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="102學年度下學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1022
+```
+
+```{r}
+stat10311 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="103學年度上學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1031
+```
+
+```{r}
+stat10322 %>%
+  ggplot()+
+  geom_col(aes(x=reorder(科目名稱,學期成績),y=學期成績,fill=必選修))+
+  geom_hline(
+    yintercept = 60,
+    size=1,
+    color="red",
+    linetype=12,
+    alpha=0.5)+
+  labs(title="103學年度下學期修課成績",
+       x="科目",
+       y="成績",
+       fill="必選修")+
+  themeez+
+  scale_y_continuous(breaks=c(0,25,50,60,75,100))+
+  coord_flip()->
+  graphlist$stat1032
+```
+
+```{r}
+graphlist
+```
+

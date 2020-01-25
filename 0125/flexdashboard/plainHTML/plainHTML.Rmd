@@ -1,0 +1,62 @@
+---
+title: "統計系畢業生"
+output: 
+  html_document:
+    theme: null
+    highlight: null
+    mathjax: null
+    self_contained: false
+    includes:
+      in_header: "external/in_header/header.html"
+      before_body: "external/before_body/before_body.html"
+      after_body: "external/after_body/after_body.html"
+params:
+  output_filename: "plain2BSHTML.html"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+<div class="container">
+<div class="column">
+<div class="row-sm">
+
+```{r, eval=T, echo=F}
+htmltools::includeHTML("external/within_body/tab.html")
+```
+
+</div>
+<div class="row-sm">
+
+```{r, eval=T, echo=F}
+htmltools::includeHTML("external/within_body/card.html")
+```
+
+</div>
+<div class="row-sm">
+One of three columns
+</div>
+</div>
+</div>
+
+
+```{r local serve, eval=F, echo=F}
+servr::daemon_stop(
+  which=servr::daemon_list()
+)
+servr::httd(dir=".",port=8000,initpath=params$output_filename)
+```
+
+
+
+```{r html inside head, eval=F, echo=FALSE}
+file.edit("external/in_header/head.html")
+```
+
+
+
+```{r html after body, eval=F, echo=FALSE}
+file.edit("external/after_body/after_body.html")
+```
